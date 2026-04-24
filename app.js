@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+require('dotenv').config();
 
 var app = express();
 
@@ -23,9 +24,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-mongoose.connect('mongodb://127.0.0.1:27017/test')
-  .then(() => console.log('Connected!'));
-  
+mongoose.connect(process.env.MONGO_URI, {
+  serverSelectionTimeoutMS: 10000,
+})
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => {
+    console.error('DB Error', err.message);
+
+    if (err.code === 'ECONNREFUSED' && err.syscall === 'querySrv') {
+      console.error('MongoDB SRV lookup failed. Use a standard mongodb:// Atlas URI or check your DNS resolver.');
+    }
+
+    if (err.message && err.message.includes('IP that is not whitelisted')) {
+      console.error('Atlas blocked this connection. Add your current IP address in Atlas Network Access, or allow 0.0.0.0/0 for development.');
+    }
+  });
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

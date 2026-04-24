@@ -1,9 +1,9 @@
 var express = require('express');
+const { userSignup } = require('../controllers/user_signup');
+const { userLogin } = require('../controllers/user_login');
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+router.post('/signup', userSignup);
+router.post('/login', userLogin);
 
 module.exports = router;
