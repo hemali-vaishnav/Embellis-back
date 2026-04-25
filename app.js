@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-mongoose.connect('mongodb://127.0.0.1:27017/test')
+mongoose.connect('mongodb+srv://maitrichak:Maii%409724@cluster0.rirfctz.mongodb.net/embellis')
   .then(() => console.log('Connected!'));
   
 // catch 404 and forward to error handler
