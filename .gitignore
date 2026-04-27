@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+uploads/
 
 # Environment variables
 .env
@@ -13,3 +14,6 @@ yarn-error.log*
 # OS files
 .DS_Store
 Thumbs.db
+
+# Optional (usually you SHOULD commit this, but since you asked)
+package-lock.json
