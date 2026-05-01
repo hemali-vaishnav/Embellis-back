@@ -24,7 +24,7 @@ exports.authorize = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id).select("_id name");
+    const user = await User.findById(decoded.id).select("_id name role");
 
     if (!user) {
       logger.error("Authorized user not found");
@@ -36,6 +36,7 @@ exports.authorize = async (req, res, next) => {
     req.user = {
       id: user._id,
       username: user.name,
+      role: user.role,
       iat: decoded.iat,
       exp: decoded.exp,
     };

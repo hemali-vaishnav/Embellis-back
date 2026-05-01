@@ -45,3 +45,39 @@
       });
     }
   };
+
+  exports.getCustom = async (req, res) => {
+    try {
+      const custom = await Custom.find({ user_id: req.user.id }).sort({ createdAt: -1 });
+
+      logger.info("Custom fetched successfully");
+      return res.status(200).json({
+        message: "Custom fetched successfully",
+        custom,
+      });
+    } catch (error) {
+      logger.error("Error in getCustom", error);
+      return res.status(500).json({
+        message: "Error in getCustom",
+        error: error.message,
+      });
+    }
+  };
+
+  exports.getAllCustom = async (req, res) => {
+    try {
+      const custom = await Custom.find().sort({ createdAt: -1 });
+
+      logger.info("All custom fetched successfully");
+      return res.status(200).json({
+        message: "All custom fetched successfully",
+        custom,
+      });
+    } catch (error) {
+      logger.error("Error in getAllCustom", error);
+      return res.status(500).json({
+        message: "Error in getAllCustom",
+        error: error.message,
+      });
+    }
+  };
