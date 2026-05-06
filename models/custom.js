@@ -31,6 +31,21 @@ const customSchema = new mongoose.Schema(
     note: {
       type: String,
     },
+    image_1: {
+      type: String,
+    },
+    image_2: {
+      type: String,
+    },
+    image_3: {
+      type: String,
+    },
+    image_4: {
+      type: String,
+    },
+    video: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
