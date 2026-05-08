@@ -5,10 +5,12 @@ const upload = require('../middleware/upload_multer');
 const { uploadCatalog } = require('../controllers/admin/upload_catalog');
 const { makeAnAdmin } = require('../controllers/admin/make_an_admin');
 const { getAllCustom } = require('../controllers/custom');
+const { getAllUser } = require('../controllers/admin/get_all_user');
 var router = express.Router();
 
 router.post('/make-admin', authorize, isAdmin, makeAnAdmin);
 router.post('/upload-catalog', authorize, isAdmin, upload.single("file"), uploadCatalog);
+router.get('/get-all-users', authorize, isAdmin, getAllUser);
 router.get('/custom', authorize, isAdmin, getAllCustom);
 
 module.exports = router;

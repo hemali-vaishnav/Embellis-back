@@ -3,11 +3,13 @@ const { userSignup, sendEmailOtp, verifyEmailOtp } = require('../controllers/use
 const { createCustom, getCustom } = require('../controllers/custom');
 const { authorize } = require('../middleware/auth');
 const upload = require('../middleware/upload_multer');
+const { getUserProfile } = require('../controllers/get_users');
 var router = express.Router();
 
 router.post('/send-otp', sendEmailOtp);
 router.post('/verify-otp', verifyEmailOtp);
 router.post('/signup', userSignup);
+router.get('/get-profile', authorize, getUserProfile);
 router.post('/custom', authorize, upload.single("file"), createCustom);
 router.get('/custom', authorize, getCustom);
 

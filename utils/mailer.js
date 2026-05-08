@@ -36,15 +36,30 @@ exports.sendOtpMail = async (email, otp) => {
   return transporter.sendMail({
     from,
     to: email,
-    subject: "Verify your Embellis email",
-    text: `Your Embellis verification OTP is ${otp}. It will expire in 60 seconds.`,
+    subject: "Your OTP Verification Code",
     html: `
-      <div style="font-family: Arial, sans-serif; line-height: 1.5;">
-        <h2>Email verification</h2>
-        <p>Your Embellis verification OTP is:</p>
-        <h1 style="letter-spacing: 4px;">${otp}</h1>
-        <p>This OTP will expire in 60 seconds.</p>
+    <div style="font-family: Arial, sans-serif; padding: 20px;">
+      <h2>Email Verification</h2>
+      <p>Hello</p>
+      <p>Your OTP for verification is:</p>
+
+      <div style="
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 5px;
+        color: #000;
+        margin: 20px 0;
+      ">
+        ${otp}
       </div>
-    `,
+
+      <p>This OTP is valid for <b>60 seconds</b>.</p>
+      <p>Please do not share this OTP with anyone.</p>
+
+      <br />
+      <p>Best regards,</p>
+      <p><b>Embellis Team</b></p>
+    </div>
+  `,
   });
 };
