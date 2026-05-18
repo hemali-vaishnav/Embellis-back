@@ -25,3 +25,61 @@ exports.uploadCatalog = async (req, res) => {
     res.status(500).json({ message:"Error in uploadCatalog", error: err.message });
   }
 };
+
+exports.getCatalog = async (req, res) => {
+  try {
+    const catalog = await Product.aggregate([
+      {
+        $sort: {
+          product_name: 1,
+          category: 1,
+        },
+      },
+      {
+        $group: {
+          _id: "$category",
+          products: {
+            $push: {
+              _id: "$_id",
+              product_name: "$product_name",
+              price: "$price",
+              size: "$size",
+              type: "$type",
+              stock: "$stock",
+              category: "$category",
+              sub_category: "$sub_category",
+              description: "$description",
+              createdAt: "$createdAt",
+              updatedAt: "$updatedAt",
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          category: "$_id",
+          products: 1,
+        },
+      },
+      {
+        $sort: {
+          category: 1,
+        },
+      },
+    ]);
+
+    return res.status(200).json({
+      message: "Catalog fetched successfully",
+      data: catalog,
+    });
+
+  } catch (err) {
+    logger.error("Error in getCatalog", err);
+
+    return res.status(500).json({
+      message: "Error in getCatalog",
+      error: err.message,
+    });
+  }
+};

@@ -1,7 +1,11 @@
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const logger = require("../logger");
 const User = require("../models/user_signup");
+const LogoutToken = require("../models/logout_token");
 require("dotenv").config();
+
+const hashToken = (token) => crypto.createHash("sha256").update(token).digest("hex");
 
 exports.authorize = async (req, res, next) => {
   try {
@@ -24,6 +28,15 @@ exports.authorize = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const loggedOutToken = await LogoutToken.findOne({ tokenHash: hashToken(token) });
+
+    if (loggedOutToken) {
+      logger.error("Logged out token used");
+      return res.status(401).json({
+        message: "Token has been logged out",
+      });
+    }
+
     const user = await User.findById(decoded.id).select("_id name role");
 
     if (!user) {
@@ -40,6 +53,7 @@ exports.authorize = async (req, res, next) => {
       iat: decoded.iat,
       exp: decoded.exp,
     };
+    req.token = token;
     next();
   } catch (error) {
     logger.error("Unauthorized access", error);
