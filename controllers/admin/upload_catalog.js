@@ -49,6 +49,8 @@ exports.getCatalog = async (req, res) => {
               category: "$category",
               sub_category: "$sub_category",
               description: "$description",
+              image_1: "$image_1",
+              image_2: "$image_2",
               createdAt: "$createdAt",
               updatedAt: "$updatedAt",
             },
