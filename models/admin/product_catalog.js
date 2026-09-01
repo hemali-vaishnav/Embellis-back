@@ -28,6 +28,9 @@ const productSchema = new mongoose.Schema(
     sub_category: {
       type: String,
     },
+    gender: {
+      type: String,
+    },
     description: {
       type: String,
     },
@@ -36,6 +39,14 @@ const productSchema = new mongoose.Schema(
     },
     image_2: {
       type: String,
+    },
+    is_trending: {
+      type: Boolean,
+      default: false,
+    },
+    is_best_seller: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }
