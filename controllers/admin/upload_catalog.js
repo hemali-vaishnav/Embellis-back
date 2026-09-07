@@ -15,10 +15,13 @@ exports.uploadCatalog = async (req, res) => {
     // data is array of objects
     await Product.insertMany(data);
 
+    const categories = [...new Set(data.map((row) => row.category).filter(Boolean))];
+
     res.json({
       success: true,
       message: "Catalog uploaded successfully",
       inserted: data.length,
+      categories,
     });
   } catch (err) {
     logger.log("Error in uploadCatalog",err);
