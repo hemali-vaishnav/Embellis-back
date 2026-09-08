@@ -3,22 +3,14 @@
 
   exports.createCustom = async (req, res) => {
     try {
-      const file = req.file.filename;
-      
-      const { type, size, print_placement, quality, note } = req.body;
-      
-      if (!file || !type || !print_placement || !quality) {
+      const file = req.file?.filename;
+
+      const { type, size, color, print_placement, quantity, price, note } = req.body;
+
+      if (!file || !type || !print_placement || !quantity || !price) {
         logger.error("Required custom fields are missing");
         return res.status(400).json({
-          message: "file, type, print_placement and quality are required",
-        });
-      }
-
-      const existingCustom = await Custom.findOne({ type });
-      if (existingCustom) {
-        logger.error("Custom type already exists");
-        return res.status(400).json({
-          message: "Custom type already exists",
+          message: "file, type, print_placement, quantity and price are required",
         });
       }
 
@@ -27,14 +19,11 @@
         file,
         type,
         size,
+        color,
         print_placement,
-        quality,
+        quantity,
+        price,
         note,
-        image_1,
-        image_2,
-        image_3,
-        image_4,
-        video
       });
 
       logger.info("Custom created successfully");

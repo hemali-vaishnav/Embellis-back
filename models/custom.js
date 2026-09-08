@@ -13,37 +13,29 @@ const customSchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
-      unique: true,
     },
     size: {
       type: String,
       enum: ["S", "M", "L", "XL", "XXL"],
     },
+    color: {
+      type: String,
+    },
     print_placement: {
       type: String,
-      enum: ["front", "back", "full_pattern", "sleeve"],
+      enum: ["front", "back", "all_over"],
       required: true,
     },
-    quality: {
+    quantity: {
+      type: Number,
+      required: true,
+      default: 1,
+    },
+    price: {
       type: Number,
       required: true,
     },
     note: {
-      type: String,
-    },
-    image_1: {
-      type: String,
-    },
-    image_2: {
-      type: String,
-    },
-    image_3: {
-      type: String,
-    },
-    image_4: {
-      type: String,
-    },
-    video: {
       type: String,
     },
   },
