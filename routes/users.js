@@ -1,6 +1,6 @@
 var express = require('express');
 const { userSignup, sendEmailOtp, verifyEmailOtp } = require('../controllers/user_signup');
-const { createCustom, getCustom } = require('../controllers/custom');
+const { createCustom, getCustom, cancelCustom } = require('../controllers/custom');
 const { authorize } = require('../middleware/auth');
 const upload = require('../middleware/upload_multer');
 const { getUserProfile } = require('../controllers/get_users');
@@ -16,6 +16,7 @@ router.post('/logout', authorize, logout);
 router.get('/get-profile', authorize, getUserProfile);
 router.post('/custom', authorize, upload.single("file"), createCustom);
 router.get('/custom', authorize, getCustom);
+router.patch('/custom/:id/cancel', authorize, cancelCustom);
 
 router.get('/cart', authorize, getCart);
 router.post('/cart', authorize, addToCart);

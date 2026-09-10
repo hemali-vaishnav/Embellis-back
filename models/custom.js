@@ -38,6 +38,11 @@ const customSchema = new mongoose.Schema(
     note: {
       type: String,
     },
+    status: {
+      type: String,
+      enum: ["pending", "cancelled"],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );

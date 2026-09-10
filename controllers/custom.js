@@ -58,6 +58,40 @@
     }
   };
 
+  exports.cancelCustom = async (req, res) => {
+    try {
+      const custom = await Custom.findOne({ _id: req.params.id, user_id: req.user.id });
+
+      if (!custom) {
+        logger.error("Custom order not found for cancellation");
+        return res.status(404).json({
+          message: "Custom order not found",
+        });
+      }
+
+      if (custom.status === "cancelled") {
+        return res.status(400).json({
+          message: "Custom order is already cancelled",
+        });
+      }
+
+      custom.status = "cancelled";
+      await custom.save();
+
+      logger.info("Custom order cancelled successfully");
+      return res.status(200).json({
+        message: "Custom order cancelled successfully",
+        custom,
+      });
+    } catch (error) {
+      logger.error("Error in cancelCustom", error);
+      return res.status(500).json({
+        message: "Error in cancelCustom",
+        error: error.message,
+      });
+    }
+  };
+
   exports.getAllCustom = async (req, res) => {
     try {
       const custom = await Custom.find().sort({ createdAt: -1 });
