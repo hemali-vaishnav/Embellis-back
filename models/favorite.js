@@ -12,6 +12,10 @@ const favoriteSchema = new mongoose.Schema(
       ref: "Product",
       required: true,
     },
+    reminderSent: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

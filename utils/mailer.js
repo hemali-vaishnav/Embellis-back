@@ -78,3 +78,78 @@ exports.sendOtpMail = async (email, otp) => {
   `,
   });
 };
+
+const renderReminderItemRow = (item) => `
+  <tr>
+    <td style="padding:12px 0; border-bottom:1px solid #f0e6d6;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="width:64px; padding-right:14px;">
+            <img src="${item.image}" alt="${item.name}" width="56" height="56" style="border-radius:8px; object-fit:cover; display:block; background-color:#fdf6e9;" />
+          </td>
+          <td style="text-align:left;">
+            <p style="margin:0; font-size:14px; color:#3d2b1a; font-weight:600;">${item.name}</p>
+            <p style="margin:2px 0 0; font-size:12px; color:#9a9a9a;">Sitting in your ${item.source} for ${item.days} days</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+`;
+
+exports.sendStaleItemsReminderMail = async (email, name, items) => {
+  const from = process.env.MAIL_FROM || process.env.SMTP_USER || process.env.EMAIL_USER;
+
+  if (!transporter) {
+    transporter = nodemailer.createTransport(getMailConfig());
+  }
+
+  const hasCart = items.some((item) => item.source === "cart");
+  const hasWishlist = items.some((item) => item.source === "wishlist");
+  const both = hasCart && hasWishlist;
+  const subjectPart = both ? "cart & wishlist" : hasCart ? "cart" : "wishlist";
+
+  return transporter.sendMail({
+    from,
+    to: email,
+    subject: `Still thinking it over? Your ${subjectPart} is waiting for you`,
+    html: `
+    <div style="background-color:#fffaf0; padding:40px 16px; font-family:Arial, Helvetica, sans-serif;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px; margin:0 auto; background-color:#ffffff; border-radius:14px; overflow:hidden; box-shadow:0 6px 24px rgba(61,43,26,0.10);">
+        <tr>
+          <td style="background-color:#3d2b1a; padding:26px 32px; text-align:center;">
+            <span style="font-size:20px; font-weight:700; letter-spacing:5px; color:#fffaf0; text-transform:uppercase;">Embellis</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:36px 32px 8px; text-align:center;">
+            <h1 style="margin:0 0 12px; font-size:20px; color:#3d2b1a;">Hi ${name || "there"}, you left something behind</h1>
+            <p style="margin:0; font-size:14px; color:#6b6b6b; line-height:1.6;">
+              These items have been in your ${subjectPart} for a while. They're still here if you'd like to complete your purchase.
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:20px 32px 8px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              ${items.map(renderReminderItemRow).join("")}
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:28px 32px 36px; text-align:center;">
+            <a href="${process.env.FRONTEND_URL || "#"}" style="display:inline-block; background-color:#c05a3c; color:#ffffff; text-decoration:none; font-size:14px; font-weight:600; padding:12px 32px; border-radius:8px;">
+              Continue shopping
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td style="background-color:#fdf6e9; padding:18px 32px; text-align:center;">
+            <p style="margin:0; font-size:12px; color:#8a7a68;">&mdash; The Embellis Team</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  `,
+  });
+};

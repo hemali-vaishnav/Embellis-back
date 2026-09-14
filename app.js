@@ -10,6 +10,7 @@ var cors = require('cors');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
+const { scheduleStaleItemsReminderJob } = require('./jobs/staleItemsReminder');
 require('dotenv').config();
 
 var app = express();
@@ -33,7 +34,10 @@ app.use('/admin', adminRouter);
 mongoose.connect(process.env.MONGO_URI, {
   serverSelectionTimeoutMS: 10000,
 })
-  .then(() => console.log('Connected to MongoDB'))
+  .then(() => {
+    console.log('Connected to MongoDB');
+    scheduleStaleItemsReminderJob();
+  })
   .catch(err => {
     console.error('DB Error', err.message);
 
